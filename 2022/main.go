@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/Jr-14/advent-of-go/2022/calorie"
+	"github.com/Jr-14/advent-of-go/2022/rps"
 )
 
 func main() {
-	maxCalorie := calorie.CountCalories("calorie/1-input.txt")
-	fmt.Printf("Max Calorie is %d.\n", maxCalorie)
+	score := rps.PlayRockPaperScissors("rps/input.txt")
+	fmt.Printf("My Max Score is %d.", score)
 }
