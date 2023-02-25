@@ -11,6 +11,8 @@ func readCaloriesFile(fileName string) [][]int {
 	if err != nil {
 		panic(err)
 	}
+	defer file.Close()
+
 	calorieArray := make([]int, 0)
 	totalCalories := make([][]int, 0)
 	scanner := bufio.NewScanner(file)

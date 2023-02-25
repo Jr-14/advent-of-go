@@ -129,6 +129,7 @@ func PlayRockPaperScissors(fileName string) int {
 	if err != nil {
 		panic(err)
 	}
+	defer file.Close()
 
 	totalScore := 0
 	scanner := bufio.NewScanner(file)
