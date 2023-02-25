@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 )
 
-func BufferReadPrintCalorier(fileName string) {
+func readCalories(fileName string) [][]int {
 	// Get file size
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -18,19 +19,50 @@ func BufferReadPrintCalorier(fileName string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("The file is %d bytes long", fileInformation.Size())
+	fmt.Printf("The file is %d bytes long\n", fileInformation.Size())
 
 	scanner := bufio.NewScanner(file)
-	newLineCounter := 0
+
+	calorieArray := make([]int, 0)
+	calorieCountArray := make([][]int, 0)
 	for scanner.Scan() {
 		text := scanner.Text()
-		if text == "" {
-			newLineCounter += 1
-			fmt.Printf("Hello I am the %d newline\n", newLineCounter)
+		if text != "" {
+			val, err := strconv.Atoi(text)
+			if err != nil {
+				log.Fatal(err)
+			}
+			calorieArray = append(calorieArray, val)
+		} else {
+			// Push the latest array of number to the entire
+			calorieCountArray = append(calorieCountArray, calorieArray)
+			calorieArray = make([]int, 0)
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
+
+	// fmt.Printf("Calorie Array: %v", calorieCountArray)
+	return calorieCountArray
+}
+
+func sumCalories(calorieArray []int) (calories int) {
+	for _, e := range calorieArray {
+		calories += e
+	}
+	return
+}
+
+func CountMaxCalorie(fileName string) int {
+	calories := readCalories(fileName)
+	maxCalorie := 0
+	for _, calorieArr := range calories {
+		newCalorie := sumCalories(calorieArr)
+		if newCalorie >= maxCalorie {
+			maxCalorie = newCalorie
+		}
+	}
+	return maxCalorie
 }
