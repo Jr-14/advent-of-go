@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	maxCalorie := calorie.CountMaxCalorie("calorie/1-input.txt")
+	maxCalorie := calorie.CountCalories("calorie/1-input.txt")
 	fmt.Printf("Max Calorie is %d.\n", maxCalorie)
 }

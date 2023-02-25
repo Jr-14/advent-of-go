@@ -2,66 +2,48 @@ package calorie
 
 import (
 	"bufio"
-	"fmt"
-	"log"
 	"os"
 	"strconv"
 )
 
-func readCalories(fileName string) [][]int {
-	// Get file size
+func readCaloriesFile(fileName string) [][]int {
 	file, err := os.Open(fileName)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-
-	fileInformation, err := file.Stat()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("The file is %d bytes long\n", fileInformation.Size())
-
-	scanner := bufio.NewScanner(file)
-
 	calorieArray := make([]int, 0)
-	calorieCountArray := make([][]int, 0)
+	totalCalories := make([][]int, 0)
+	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		text := scanner.Text()
 		if text != "" {
-			val, err := strconv.Atoi(text)
+			calorie, err := strconv.Atoi(text)
 			if err != nil {
-				log.Fatal(err)
+				panic(err)
 			}
-			calorieArray = append(calorieArray, val)
+			calorieArray = append(calorieArray, calorie)
 		} else {
-			// Push the latest array of number to the entire
-			calorieCountArray = append(calorieCountArray, calorieArray)
+			totalCalories = append(totalCalories, calorieArray)
 			calorieArray = make([]int, 0)
 		}
 	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	// fmt.Printf("Calorie Array: %v", calorieCountArray)
-	return calorieCountArray
+	return totalCalories
 }
 
-func sumCalories(calorieArray []int) (calories int) {
-	for _, e := range calorieArray {
-		calories += e
+func sum(array []int) (sum int) {
+	for _, element := range array {
+		sum += element
 	}
 	return
 }
 
-func CountMaxCalorie(fileName string) int {
-	calories := readCalories(fileName)
+func CountCalories(fileName string) int {
+	elfCalories := readCaloriesFile(fileName)
 	maxCalorie := 0
-	for _, calorieArr := range calories {
-		newCalorie := sumCalories(calorieArr)
-		if newCalorie >= maxCalorie {
-			maxCalorie = newCalorie
+	for _, calories := range elfCalories {
+		countedCalorie := sum(calories)
+		if countedCalorie >= maxCalorie {
+			maxCalorie = countedCalorie
 		}
 	}
 	return maxCalorie
