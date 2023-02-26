@@ -41,6 +41,46 @@ func calculateRucksackPriority(rucksack string) int {
 	return priority
 }
 
+func calculateRuckSackPriorityPartTwo(fSack, sSack, tSack string) int {
+	fSackPriority := [53]int{0}
+	sSackPriority := [53]int{0}
+	tSackPriority := [53]int{0}
+	var commonItemPriority int
+	for i := 0; i < len(fSack); i++ {
+		character := string(fSack[i])
+		priority := calculateCharacterPriority(character)
+		if fSackPriority[priority] < 1 {
+			fSackPriority[priority]++
+		}
+	}
+
+	for i := 0; i < len(sSack); i++ {
+		character := string(sSack[i])
+		priority := calculateCharacterPriority(character)
+		if sSackPriority[priority] < 1 {
+			sSackPriority[priority]++
+		}
+	}
+
+	for i := 0; i < len(tSack); i++ {
+		character := string(tSack[i])
+		priority := calculateCharacterPriority(character)
+		if tSackPriority[priority] < 1 {
+			tSackPriority[priority]++
+		}
+	}
+
+	for i := 0; i < len(fSackPriority); i++ {
+		fp := fSackPriority[i]
+		sp := sSackPriority[i]
+		tp := tSackPriority[i]
+		if fp+sp+tp == 3 {
+			commonItemPriority = i
+		}
+	}
+	return commonItemPriority
+}
+
 func CalculateRuckSack(fileName string) (sum int) {
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -52,6 +92,29 @@ func CalculateRuckSack(fileName string) (sum int) {
 	for scanner.Scan() {
 		rucksack := scanner.Text()
 		sum += calculateRucksackPriority(rucksack)
+	}
+	return
+}
+
+func CalculateRuckSackPartTwo(fileName string) (sum int) {
+	file, err := os.Open(fileName)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+
+	lineCounter := 0
+	elfGroup := make([]string, 3)
+	for scanner.Scan() {
+		rucksack := scanner.Text()
+		elfGroup[lineCounter] = rucksack
+		lineCounter += 1
+		if lineCounter == 3 {
+			sum += calculateRuckSackPriorityPartTwo(elfGroup[0], elfGroup[1], elfGroup[2])
+			lineCounter = 0
+			elfGroup = make([]string, 3)
+		}
 	}
 	return
 }

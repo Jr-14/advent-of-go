@@ -10,6 +10,6 @@ import (
 func main() {
 	// score := rps.PlayRockPaperScissors("rps/input.txt")
 	// fmt.Printf("My Max Score is %d.", score)
-	priorities := rucksack.CalculateRuckSack("rucksack/input.txt")
+	priorities := rucksack.CalculateRuckSackPartTwo("rucksack/input.txt")
 	fmt.Printf("Sum of priorities in Rucksack is %d.", priorities)
 }
