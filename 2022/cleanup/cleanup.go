@@ -22,6 +22,16 @@ func isFullyOverlapping(firstSection Section, secondSection Section) bool {
 	return false
 }
 
+func isPartiallyOverlapping(firstSection Section, secondSection Section) bool {
+	if firstSection.high < secondSection.low {
+		return false
+	}
+	if firstSection.low > secondSection.high {
+		return false
+	}
+	return true
+}
+
 func parseSection(section string) Section {
 	substring := strings.Split(section, "-")
 	low, err := strconv.Atoi(substring[0])
@@ -60,6 +70,25 @@ func CountFullOverlappingAssignments(fileName string) int {
 		text := scanner.Text()
 		elfAssignmentOne, elfAssignmentTwo := retrieveAssignmentPairs(text)
 		if isFullyOverlapping(elfAssignmentOne, elfAssignmentTwo) {
+			sum += 1
+		}
+	}
+	return sum
+}
+
+func CountPartialOverlappingAssignments(fileName string) int {
+	file, err := os.Open(fileName)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	sum := 0
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		text := scanner.Text()
+		elfAssignmentOne, elfAssignmentTwo := retrieveAssignmentPairs(text)
+		if isPartiallyOverlapping(elfAssignmentOne, elfAssignmentTwo) {
 			sum += 1
 		}
 	}

@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	overlapping := cleanup.CountFullOverlappingAssignments("cleanup/input.txt")
-	fmt.Printf("Sum of priorities in Rucksack is %d.", overlapping)
+	overlapping := cleanup.CountPartialOverlappingAssignments("cleanup/input.txt")
+	fmt.Printf("Sum of any overlapping assignment is %d.", overlapping)
 }
