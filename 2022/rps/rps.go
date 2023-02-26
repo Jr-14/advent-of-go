@@ -12,6 +12,10 @@ type RockPaperScissors struct {
 	points int
 }
 
+var Rock = RockPaperScissors{"Rock", 1}
+var Paper = RockPaperScissors{"Paper", 2}
+var Scissors = RockPaperScissors{"Scissors", 3}
+
 func TestHelloWorld() {
 	fmt.Println("Hello World!")
 }
@@ -22,51 +26,45 @@ func parse(str string) (string, string) {
 }
 
 func mapChoice(rpsChoice string) RockPaperScissors {
-	rock := RockPaperScissors{"Rock", 1}
-	paper := RockPaperScissors{"Paper", 2}
-	scissors := RockPaperScissors{"Scissors", 3}
 	switch rpsChoice {
 	case "A":
-		return rock
+		return Rock
 	case "B":
-		return paper
+		return Paper
 	case "C":
-		return scissors
+		return Scissors
 	case "X":
-		return rock
+		return Rock
 	case "Y":
-		return paper
+		return Paper
 	case "Z":
-		return scissors
+		return Scissors
 	default:
 		panic("oh no")
 	}
 }
 
 func determineMyChoice(opponentChoice RockPaperScissors, winningCondition string) RockPaperScissors {
-	rock := RockPaperScissors{"Rock", 1}
-	paper := RockPaperScissors{"Paper", 2}
-	scissors := RockPaperScissors{"Scissors", 3}
 	switch winningCondition {
 	case "lose":
 		switch opponentChoice {
-		case rock:
-			return scissors
-		case paper:
-			return rock
-		case scissors:
-			return paper
+		case Rock:
+			return Scissors
+		case Paper:
+			return Rock
+		case Scissors:
+			return Paper
 		default:
 			panic("oops")
 		}
 	case "win":
 		switch opponentChoice {
-		case rock:
-			return paper
-		case paper:
-			return scissors
-		case scissors:
-			return rock
+		case Rock:
+			return Paper
+		case Paper:
+			return Scissors
+		case Scissors:
+			return Rock
 		default:
 			panic("oops")
 		}
