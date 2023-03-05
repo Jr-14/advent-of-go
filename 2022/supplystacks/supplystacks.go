@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+var MAX_STACK_INDEX = 9
+
 func createCrateAndAddToInitialStack(lineStack string, cargoStack *[][]string, rowIndex int) {
 	// fmt.Printf("Current line stack: %s", lineStack)
 	// fmt.Println("")
@@ -23,14 +25,13 @@ func createCrateAndAddToInitialStack(lineStack string, cargoStack *[][]string, r
 }
 
 func buildInitialStack(file *os.File, scanner *bufio.Scanner) [][]string {
-	MAX_LINE_NUMBER := 9
 	cargoStack := make([][]string, 9)
 	lineStack := make([]string, 0)
 
 	counter := 0
 	for scanner.Scan() {
 		counter++
-		if counter > MAX_LINE_NUMBER {
+		if counter > MAX_STACK_INDEX {
 			break
 		}
 		text := scanner.Text()
