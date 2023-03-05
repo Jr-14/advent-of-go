@@ -56,21 +56,14 @@ func move(amount, from, to int, cargoStack *[][]string) {
 }
 
 func moveInOrder(amount, from, to int, cargoStack *[][]string) {
-	auxStack := make([]string, 0)
 	fromStack := (*cargoStack)[from-1]
-	for i := 0; i < amount; i++ {
-		last := len(fromStack) - 1
-		lastCargo := fromStack[last]
-		auxStack = append(auxStack, lastCargo)
-		fromStack = fromStack[:last]
-	}
+	lenOfStackToMove := len(fromStack)
+	stackToMove := fromStack[lenOfStackToMove-amount:]
+	fromStack = fromStack[:lenOfStackToMove-amount]
 	(*cargoStack)[from-1] = fromStack
 
 	toStack := (*cargoStack)[to-1]
-	for i := amount - 1; i >= 0; i-- {
-		topAuxStack := auxStack[i]
-		toStack = append(toStack, topAuxStack)
-	}
+	toStack = append(toStack, stackToMove...)
 	(*cargoStack)[to-1] = toStack
 }
 
