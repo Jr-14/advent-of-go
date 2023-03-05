@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/Jr-14/advent-of-go/2022/cleanup"
+	"github.com/Jr-14/advent-of-go/2022/supplystacks"
 )
 
 func main() {
-	overlapping := cleanup.CountPartialOverlappingAssignments("cleanup/input.txt")
-	fmt.Printf("Sum of any overlapping assignment is %d.", overlapping)
+	// const example = "[Q] [J]                         [H]"
+	supplystacks.SupplyStack("supplystacks/input.txt")
+	// substrings := strings.Split(example, " ")
+	// fmt.Printf("%v", substrings)
 }
