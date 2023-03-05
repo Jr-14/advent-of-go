@@ -55,6 +55,25 @@ func move(amount, from, to int, cargoStack *[][]string) {
 	}
 }
 
+func moveInOrder(amount, from, to int, cargoStack *[][]string) {
+	auxStack := make([]string, 0)
+	fromStack := (*cargoStack)[from-1]
+	for i := 0; i < amount; i++ {
+		last := len(fromStack) - 1
+		lastCargo := fromStack[last]
+		auxStack = append(auxStack, lastCargo)
+		fromStack = fromStack[:last]
+	}
+	(*cargoStack)[from-1] = fromStack
+
+	toStack := (*cargoStack)[to-1]
+	for i := amount - 1; i >= 0; i-- {
+		topAuxStack := auxStack[i]
+		toStack = append(toStack, topAuxStack)
+	}
+	(*cargoStack)[to-1] = toStack
+}
+
 func parseText(text string) (amount, to, from int) {
 	arr := strings.Split(text, " ")
 	amount, err := strconv.Atoi(arr[1])
@@ -95,7 +114,7 @@ func SupplyStack(fileName string) string {
 	for scanner.Scan() {
 		lineCount += 1
 		amount, to, from := parseText(scanner.Text())
-		move(amount, from, to, &cargoStack)
+		moveInOrder(amount, from, to, &cargoStack)
 	}
 	return buildString(&cargoStack)
 }
