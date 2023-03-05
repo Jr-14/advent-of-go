@@ -2,7 +2,6 @@ package supplystacks
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -11,9 +10,6 @@ import (
 var MAX_STACK_INDEX = 9
 
 func createCrateAndAddToInitialStack(lineStack string, cargoStack *[][]string, rowIndex int) {
-	// fmt.Printf("Current line stack: %s", lineStack)
-	// fmt.Println("")
-	// cargoRow := (*cargoStack)[rowIndex]
 	for i := 1; i < len(lineStack); i += 4 {
 		character := string(lineStack[i])
 		if character != " " {
@@ -35,40 +31,28 @@ func buildInitialStack(file *os.File, scanner *bufio.Scanner) [][]string {
 			break
 		}
 		text := scanner.Text()
-		// fmt.Println(text)
 		lineStack = append(lineStack, text)
 	}
-	// fmt.Printf("line Stack:\n %v", lineStack)
-	// fmt.Println("")
-
 	row := 0
 	for i := len(lineStack) - 2; i >= 0; i-- {
 		createCrateAndAddToInitialStack(lineStack[i], &cargoStack, row)
 		row++
 	}
-	// fmt.Printf("%v", cargoStack)
 	return cargoStack
 }
 
 func move(amount, from, to int, cargoStack *[][]string) {
-	auxStack := make([]string, 0)
 	fromStack := (*cargoStack)[from-1]
-	// fmt.Printf("%v", fromStack)
+	toStack := (*cargoStack)[to-1]
 	for i := 0; i < amount; i++ {
 		last := len(fromStack) - 1
 		lastCargo := fromStack[last]
-		auxStack = append(auxStack, lastCargo)
 		fromStack = fromStack[:last]
-	}
-	(*cargoStack)[from-1] = fromStack
-	// fmt.Printf("%v", fromStack)
+		(*cargoStack)[from-1] = fromStack
 
-	toStack := (*cargoStack)[to-1]
-	for i := amount - 1; i >= 0; i-- {
-		topAuxStack := auxStack[i]
-		toStack = append(toStack, topAuxStack)
+		toStack = append(toStack, lastCargo)
+		(*cargoStack)[to-1] = toStack
 	}
-	(*cargoStack)[to-1] = toStack
 }
 
 func parseText(text string) (amount, to, from int) {
@@ -91,15 +75,16 @@ func parseText(text string) (amount, to, from int) {
 	return
 }
 
-func printLastCargoOnStack(cargoStack *[][]string) {
+func buildString(cargoStack *[][]string) string {
+	topOfStack := make([]string, 0)
 	for i := 0; i < 9; i++ {
 		last := len((*cargoStack)[i]) - 1
-		fmt.Printf("%s", (*cargoStack)[i][last])
+		topOfStack = append(topOfStack, (*cargoStack)[i][last])
 	}
-	fmt.Println("")
+	return strings.Join(topOfStack, "")
 }
 
-func SupplyStack(fileName string) {
+func SupplyStack(fileName string) string {
 	file, err := os.Open(fileName)
 	if err != nil {
 		panic(err)
@@ -107,17 +92,10 @@ func SupplyStack(fileName string) {
 	scanner := bufio.NewScanner(file)
 	cargoStack := buildInitialStack(file, scanner)
 	lineCount := 0
-	fmt.Printf("%v", cargoStack)
 	for scanner.Scan() {
 		lineCount += 1
-		text := scanner.Text()
-		amount, to, from := parseText(text)
-		// fmt.Printf("%d, %d, %d", amount, to, from)
+		amount, to, from := parseText(scanner.Text())
 		move(amount, from, to, &cargoStack)
-		// fmt.Println(text)
-		// if lineCount > 2 {
-		// 	break
-		// }
 	}
-	printLastCargoOnStack(&cargoStack)
+	return buildString(&cargoStack)
 }
