@@ -45,7 +45,7 @@ func TuningTrouble(fileName string) int {
 		if markerPos > 0 {
 			str := string(signal[markerPos-3:markerPos + 1])
 			fmt.Printf("Signal: %s\n", str)
-			return nPos + markerPos + 2
+			return nPos + markerPos
 		}
 		nPos += n
 		signalPrefix = string(signal[n-4:n])
@@ -91,9 +91,24 @@ func processSignal(signal, signalPrefix string, n int) (int) {
 		return j + 1
 	}
 
-	for i := 4; i < n; i++ {
-		charToRemove := string(signal[i-4])
+	x := 0
+	if signalPrefix == "" {
+		x = 4
+	}
+	
+	for i := x; i < n; i++ {
+
+		var charToRemove string
+		if i >= 4 {
+			charToRemove = string(signal[i-4])
+		} else {
+			charToRemove = string(signalPrefix[i])
+		}
 		m[charToRemove] -= 1
+		val, _ := m[charToRemove]
+		if val == 0 {
+			delete(m, charToRemove)
+		}
 
 		character := string(signal[i])
 		_, ok := m[character]
@@ -102,13 +117,7 @@ func processSignal(signal, signalPrefix string, n int) (int) {
 		} else {
 			m[character] = 1
 		}
-		for _, v := range m {
-			if v > 1 {
-				earlyReturn = false
-				break
-			}
-		}
-		if earlyReturn {
+		if len(m) == 4 {
 			return i + 1
 		}
 	}
