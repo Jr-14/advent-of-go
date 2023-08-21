@@ -1,6 +1,7 @@
 package cleanup
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -83,5 +84,29 @@ func TestIsPartiallyOverlapping(t *testing.T) {
 	partiallyOverlaps = isFullyOverlapping(firstSection, secondSection)
 	if partiallyOverlaps {
 		t.Fatalf(`Second section does not partially overlap first section`)
+	}
+}
+
+func TestCountFullyOverlappingAssignments(t *testing.T) {
+	s := `70-70,66-87
+70-70,40-87
+32-99,31-78
+20-54,69-96`
+	reader := strings.NewReader(s)
+	count := CountFullOverlappingAssignments(reader)
+	if count != 2 {
+		t.Fatalf(`Number of overlaps is 2 but got %d`, count)
+	}
+}
+func TestCountPartiallyOverlappingAssignments(t *testing.T) {
+	s := `70-70,66-87
+40-70,50-90
+50-90,40-70
+20-54,69-96
+90-99,1-10`
+	reader := strings.NewReader(s)
+	count := CountPartialOverlappingAssignments(reader)
+	if count != 3 {
+		t.Fatalf(`Number of partial overlaps is 3 but got %d`, count)
 	}
 }

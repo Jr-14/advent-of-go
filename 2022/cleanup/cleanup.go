@@ -2,6 +2,7 @@ package cleanup
 
 import (
 	"bufio"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -57,15 +58,18 @@ func retrieveAssignmentPairs(assignments string) (Section, Section) {
 	return elfSectionOne, elfSectionTwo
 }
 
-func CountFullOverlappingAssignments(fileName string) int {
+func CountFullyOverlappingAssignmentsFromFile(fileName string) int {
 	file, err := os.Open(fileName)
 	if err != nil {
 		panic(err)
 	}
 	defer file.Close()
+	return CountFullOverlappingAssignments(file)
+}
 
+func CountFullOverlappingAssignments(reader io.Reader) int {
+	scanner := bufio.NewScanner(reader)
 	sum := 0
-	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		text := scanner.Text()
 		elfAssignmentOne, elfAssignmentTwo := retrieveAssignmentPairs(text)
@@ -76,15 +80,18 @@ func CountFullOverlappingAssignments(fileName string) int {
 	return sum
 }
 
-func CountPartialOverlappingAssignments(fileName string) int {
+func CountPartiallyOverlappingAssignmentsFromFile(fileName string) int {
 	file, err := os.Open(fileName)
 	if err != nil {
 		panic(err)
 	}
 	defer file.Close()
+	return CountPartialOverlappingAssignments(file)
+}
 
+func CountPartialOverlappingAssignments(reader io.Reader) int {
+	scanner := bufio.NewScanner(reader)
 	sum := 0
-	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		text := scanner.Text()
 		elfAssignmentOne, elfAssignmentTwo := retrieveAssignmentPairs(text)
